@@ -25,7 +25,7 @@ OR
 expo start
 ```
 You will find a QR code. Scan it with expo client app on phone. You can also use an Android Emulator on laptop/pc or run the app in browser.
+To get the weather condition of your location, you need an API key. Go to [Open-Weather](https://openweathermap.org/api) and Sign In. After signing in, go to API Keys section where you will find your API key. Copy it and paste it in respective place in code.
 
-To get the weather condition of your location, you need an API key. Go to [Open-Weather](https://openweathermap.org/api) and Sign In. After signing in, go to API Keys section where you will find your API key. Copy it and paste it in respective place in code. 
-***Bam..!!! Ready To GO..!!!
+### Bam..!!! Ready To GO..!!!
 
