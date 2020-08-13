@@ -1,13 +1,20 @@
 import React, {Component, useEffect, useState} from 'react'
-import {View, Text, StyleSheet} from 'react-native'
+import {View, Text, StyleSheet, ActivityIndicator, ImageBackground, Image} from 'react-native'
 import { StatusBar } from 'expo-status-bar'
 import * as Location from 'expo-location'
 import { AppLoading } from 'expo'
 import WeatherInfo from './components/WeatherInfo'
 import UnitsPicker from './components/UnitsPicker'
+import {colors} from './utils/index'
+import ReloadIcon from './components/ReloadIcon'
+import WeatherDetails from './components/WeatherDetails'
+//import {WEATHER_API_KEY} from 'react-native-dotenv'
+
 
 const WEATHER_API_KEY = '93eda94547509b7f5439015421cd6fdf'
 const BASE_WEATHER_URL = 'https://api.openweathermap.org/data/2.5/weather?'
+const image = { uri: "C:\Users\DELL\Desktop\Programming\ReactNative\WeatherApp-Using-REACT-NATIVE\bg.jpg" };
+
 
 export default function App() {
   const [errorMessage, setErrorMessage] = useState(null)
@@ -19,6 +26,8 @@ export default function App() {
   }, [unitsSystem])
 
   async function load() {
+    setCurrentWeather(null)
+    setErrorMessage(null)
     try {
       let { status } = await Location.requestPermissionsAsync()
       if(status != 'granted') {
@@ -42,36 +51,67 @@ export default function App() {
       setErrorMessage(errorMessage)
     }
   }
-
+  
   if (currentWeather) {
     return(
-      <View style = {styles.container}>
-         <StatusBar style = "auto" />
-        <View style = {styles.main}>
-          <UnitsPicker unitsSystem = {unitsSystem} setUnitSystem = {setUnitSystem} />
-          <WeatherInfo currentWeather = {currentWeather}/>
+        <View style = {styles.container}>
+          <StatusBar style = "auto" />
+          <ImageBackground source={image} style={styles.backgroundImage}>
+          <View style = {styles.main}>
+            <UnitsPicker unitsSystem = {unitsSystem} setUnitSystem = {setUnitSystem} />
+            <ReloadIcon load={load}  />
+            <WeatherInfo currentWeather = {currentWeather}/>
+          </View>
+          <View>
+            <WeatherDetails currentWeather = {currentWeather} unitsSystem = {unitsSystem} />
+          </View>
+          </ImageBackground>
         </View>
+    )
+  }
+  else if (errorMessage){
+    return(
+      <View style = {styles.container}>
+        <ReloadIcon load={load} />
+        <Text style = {{textAlign: 'center'}}>{errorMessage}</Text>
+        <StatusBar style = "auto" />
       </View>
     )
-   }
+  }
   else {
     return(
       <View style = {styles.container}>
-        <Text>{errorMessage}</Text>
+        <ActivityIndicator size="large" color={colors.PRIMARY_COLOR} />
         <StatusBar style = "auto" />
       </View>
     )
   }
 }
+
 const styles  = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
     justifyContent: 'center',
+    backgroundColor: rgb(188,188,188),
+    shadowColor: "#000",
+    shadowOffset: {
+	    width: 0,
+	    height: 12,
+    },
+    shadowOpacity: 0.58,
+    shadowRadius: 50.00,
+
+    elevation: 50,
   },
 
   main: {
     justifyContent: 'center',
     flex: 1
+  },
+
+  backgroundImage: {
+    flex: 1,
+    resizeMode: 'cover', // or 'stretch'
   }
 })
